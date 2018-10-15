@@ -56,10 +56,8 @@ static struct config {
 	char *queue_size;
 	char *keep_alive_tmo;
 	char *reconnect_delay;
-	char *host_pdu_dgst;
-	char *host_data_dgst;
-	char *target_pdu_dgst;
-	char *target_data_dgst;
+	char *hdr_digest;
+	char *data_digest;
 	char *raw;
 	char *device;
 } cfg = { NULL };
@@ -588,47 +586,25 @@ static int build_options(char *argstr, int max_len)
 		max_len -= len;
 	}
 
-        if (cfg.host_pdu_dgst) {
-                if (strcmp(cfg.host_pdu_dgst, "on") == 0) {
-                        len = snprintf(argstr, max_len, ",enable_host_pdu_dgst");
+        if (cfg.hdr_digest) {
+                if (strcmp(cfg.hdr_digest, "on") == 0) {
+                        len = snprintf(argstr, max_len, ",hdr_digest");
                         if (len < 0)
                                 return -EINVAL;
                         argstr += len;
                         max_len -= len;
-                } else if (strcmp(cfg.host_pdu_dgst, "off") != 0)
+                } else if (strcmp(cfg.hdr_digest, "off") != 0)
                         return -EINVAL;
         }
 
-        if (cfg.host_data_dgst) {
-                if (strcmp(cfg.host_data_dgst, "on") == 0) {
-                        len = snprintf(argstr, max_len, ",enable_host_data_dgst");
+        if (cfg.data_digest) {
+                if (strcmp(cfg.data_digest, "on") == 0) {
+                        len = snprintf(argstr, max_len, ",data_digest");
                         if (len < 0)
                                 return -EINVAL;
                         argstr += len;
                         max_len -= len;
-                } else if (strcmp(cfg.host_data_dgst, "off") != 0)
-                        return -EINVAL;
-        }
-
-        if (cfg.target_pdu_dgst) {
-                if (strcmp(cfg.target_pdu_dgst, "on") == 0) {
-                        len = snprintf(argstr, max_len, ",enable_target_pdu_dgst");
-                        if (len < 0)
-                                return -EINVAL;
-                        argstr += len;
-                        max_len -= len;
-                } else if (strcmp(cfg.target_pdu_dgst, "off") != 0)
-                        return -EINVAL;
-        }
-
-        if (cfg.target_data_dgst) {
-                if (strcmp(cfg.target_data_dgst, "on") == 0) {
-                        len = snprintf(argstr, max_len, ",enable_target_data_dgst");
-                        if (len < 0)
-                                return -EINVAL;
-                        argstr += len;
-                        max_len -= len;
-                } else if (strcmp(cfg.target_data_dgst, "off") != 0)
+                } else if (strcmp(cfg.data_digest, "off") != 0)
                         return -EINVAL;
         }
 
@@ -939,10 +915,8 @@ int connect(const char *desc, int argc, char **argv)
 		{"queue-size",      'Q', "LIST", CFG_STRING, &cfg.queue_size,      required_argument, "number of io queue elements to use (default 128)" },
 		{"keep-alive-tmo",  'k', "LIST", CFG_STRING, &cfg.keep_alive_tmo,  required_argument, "keep alive timeout period in seconds" },
 		{"reconnect-delay", 'c', "LIST", CFG_STRING, &cfg.reconnect_delay, required_argument, "reconnect timeout period in seconds" },
-		{"host-pdu-dgst",   'p', "LIST", CFG_STRING, &cfg.host_pdu_dgst,   required_argument, "enable/disable host PDU digest (default off)" },
-		{"host-data-dgst",   'd', "LIST", CFG_STRING, &cfg.host_data_dgst,  required_argument, "enable/disable host data digest (default off)" },
-		{"target-pdu-dgst",   'P', "LIST", CFG_STRING, &cfg.target_pdu_dgst,  required_argument, "enable/disable target PDU digest (default off)" },
-		{"target-data-dgst",   'D', "LIST", CFG_STRING, &cfg.target_data_dgst, required_argument, "enable/disable target data digest (default off)" },
+		{"hdr-digest",   'p', "LIST", CFG_STRING, &cfg.hdr_digest,   required_argument, "enable/disable PDU digest (default off)" },
+		{"data-digest",   'd', "LIST", CFG_STRING, &cfg.data_digest,  required_argument, "enable/disable data digest (default off)" },
 		{NULL},
 	};
 
