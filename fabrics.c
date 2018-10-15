@@ -55,6 +55,7 @@ static struct config {
 	char *nr_io_queues;
 	char *queue_size;
 	char *keep_alive_tmo;
+        char *ctrl_loss_tmo;
 	char *reconnect_delay;
 	char *hdr_digest;
 	char *data_digest;
@@ -578,6 +579,14 @@ static int build_options(char *argstr, int max_len)
 		max_len -= len;
 	}
 
+	if (cfg.ctrl_loss_tmo) {
+		len = snprintf(argstr, max_len, ",ctrl_loss_tmo=%s", cfg.ctrl_loss_tmo);
+		if (len < 0)
+			return -EINVAL;
+		argstr += len;
+		max_len -= len;
+	}
+
 	if (cfg.reconnect_delay) {
 		len = snprintf(argstr, max_len, ",reconnect_delay=%s", cfg.reconnect_delay);
 		if (len < 0)
@@ -914,6 +923,7 @@ int connect(const char *desc, int argc, char **argv)
 		{"nr-io-queues",    'i', "LIST", CFG_STRING, &cfg.nr_io_queues,    required_argument, "number of io queues to use (default is core count)" },
 		{"queue-size",      'Q', "LIST", CFG_STRING, &cfg.queue_size,      required_argument, "number of io queue elements to use (default 128)" },
 		{"keep-alive-tmo",  'k', "LIST", CFG_STRING, &cfg.keep_alive_tmo,  required_argument, "keep alive timeout period in seconds" },
+		{"ctrl-loss-tmo", 'l', "LIST", CFG_STRING, &cfg.ctrl_loss_tmo,  required_argument, "control loss timeout period in seconds" },
 		{"reconnect-delay", 'c', "LIST", CFG_STRING, &cfg.reconnect_delay, required_argument, "reconnect timeout period in seconds" },
 		{"hdr-digest",   'p', "LIST", CFG_STRING, &cfg.hdr_digest,   required_argument, "enable/disable PDU digest (default off)" },
 		{"data-digest",   'd', "LIST", CFG_STRING, &cfg.data_digest,  required_argument, "enable/disable data digest (default off)" },
