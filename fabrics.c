@@ -597,7 +597,7 @@ static int build_options(char *argstr, int max_len)
 
         if (cfg.hdr_digest) {
                 if (strcmp(cfg.hdr_digest, "on") == 0) {
-                        len = snprintf(argstr, max_len, ",hdr_digest");
+                        len = snprintf(argstr, max_len, ",enable_hdr_dgst");
                         if (len < 0)
                                 return -EINVAL;
                         argstr += len;
@@ -608,7 +608,7 @@ static int build_options(char *argstr, int max_len)
 
         if (cfg.data_digest) {
                 if (strcmp(cfg.data_digest, "on") == 0) {
-                        len = snprintf(argstr, max_len, ",data_digest");
+                        len = snprintf(argstr, max_len, ",enable_data_dgst");
                         if (len < 0)
                                 return -EINVAL;
                         argstr += len;
